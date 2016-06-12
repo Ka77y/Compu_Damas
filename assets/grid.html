@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>Checkers</title>
+		<script type='text/javascript' src='js/AnimateCSS.js'></script>
+		<script type='text/javascript' src='js/grid.js'></script>
+		<link rel='stylesheet' type='text/css' href='css/gamegrid.css' />
+
+	</head>
+	<body onload='loadGrid()'>
+		<br/><h2 id='checkerslbl'>Checkers</h2><br/><br/>
+		<div id='whiteplayer'>White Player's name: <input id='whitename'></input><button type='button' onclick='setName("white")'>Submit</button><br/><br/></div>
+		<div id='gamegrid'></div>
+		<div id='location'></div>
+		<div id='redplayer'><br/>Black Player's name: <input id='blackname'></input><button type='button' onclick='setName("black")'>Submit</button></div>
+		Game Options: <select id='options' onchange='selectOption()'>
+			<option value='null'></option>
+			<option value='reset'>Reset</option>
+			<option value='redsurrender'>Black Surrenders</option>
+			<option value='whitesurrender'>White Surrenders</option>
+		</select>
+		<button type='button' onclick='load()'>Load</button>
+
+		<script>
+			var allcookies = document.cookie;
+			var pos = allcookies.indexOf('3550timstamp=');
+			var value;
+			if (pos != -1)
+			{
+				var start = pos + 13;
+				var end = allcookies.indexOf(';', start);
+				if (end == -1)
+					end = allcookies.length;
+				value = allcookies.substring(start, end);
+			}
+			document.write('<br/><br/>' + value);
+		</script>
+		<br/><a href="cookieCheck.html">Check Cookie</a>
+	</body>
+</html>
+

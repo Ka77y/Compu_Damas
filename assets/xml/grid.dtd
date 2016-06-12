@@ -1,0 +1,15 @@
+<!ELEMENT game (grid+, selected?)>
+<!ATTLIST game
+	white	CDATA	#IMPLIED
+	red	CDATA	#IMPLIED
+	turn	CDATA	#REQUIRED
+>
+
+<!ELEMENT grid (x, y, occupied)>
+<!ELEMENT selected (x, y, occupied?)>
+
+<!ELEMENT x (#PCDATA)>
+<!ELEMENT y (#PCDATA)>
+<!ELEMENT occupied (#PCDATA)>
+
+

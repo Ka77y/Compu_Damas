@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="game">
+	<xs:complexType>
+		<xs:attribute name="white" type="xs:string" />
+		<xs:attribute name="red" type="xs:string" />
+		<xs:attribute name="turn" type="xs:string" use="required" />
+		<xs:element name="grid">
+			<xs:complexType>
+				<xs:element name="x">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="7" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="y">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="7" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="occupied" type="xs:string" />
+			</xs:complexType>
+		</xs:element>
+
+		<xs:element name="selected">
+			<xs:complexType>
+				<xs:element name="x">
+					<xs:simpleType>
+					<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="7" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="y">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:minInclusive value="0" />
+							<xs:maxInclusive value="7" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="occupied" type="xs:string" />
+			</xs:complexType>
+		</xs:element>
+	</xs:complexType>
+</xs:element>
+</xs:schema>

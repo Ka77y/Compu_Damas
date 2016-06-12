@@ -1,0 +1,699 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Damas chinas</title>
+<style type="text/css">
+<!--
+.Estilo16 {font-size: 14px}
+#Layer1 {position:absolute;
+width:286px;
+height:251px;
+z-index:1;
+left: 842px;
+top: 172px;
+}
+.Estilo17 {font-family: Arial, Helvetica, sans-serif}
+#Layer2 {position:absolute;
+width:140px;
+height:23px;
+z-index:2;
+left: 923px;
+top: 471px;
+}
+a:link {
+text-decoration: none;
+}
+a:visited {
+text-decoration: none;
+}
+a:hover {
+text-decoration: underline;
+}
+a:active {
+text-decoration: none;
+}
+-->
+</style>
+<link rel="icon" type="image/gif" href=" http://www.dibucuentos.com/favicon/animated_favicon1.gif">
+<style type="text/css">
+<!--
+body {
+background-image: url(../../../imagenes1/fondos/fondo.jpg);
+}
+.Estilo18 {color: #006666}
+-->
+</style></head>
+
+<body onload="var SymTmpWinOpen = window.open; window.open = SymWinOpen; var SymTmpWinOpen = window.open; window.open = SymWinOpen; window.newGame(); window.open = SymTmpWinOpen;; window.open = SymTmpWinOpen;">
+<table width="954" border="0">
+<tr>
+<td width="304" height="83"> <a href="../../../index.html" title=" ir a P&aacute;gina Principal" target="_top"><img src=" ../../../imagenes1/imagen1/sin-titulo-3.gif" alt="ir a P&aacute;gina principal" width=" 300" height="80" border="2" /> </a></td>
+<td width="302"><a title="Estoy en juegos" target="_top"><img src="../../../imagenes1/imagen-juegos/Dibujo-1.gif" alt="estoy en Juegos" width="300" height="80" border=" 1" /></a></td>
+<td width="334"><div id="google_translate_element"> </div><script>
+function googleTranslateElementInit() {
+new google.translate.TranslateElement({
+pageLanguage: 'es'
+}, 'google_translate_element');
+}
+</script><script src="http://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"> </script>
+&nbsp;</td>
+</tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>
+<SCRIPT LANGUAGE="JavaScript">
+<!-- Mas o menos traducido por Javascript.com.mx en http://www.javascript.com.mx -->
+<!-- Mas trucos y scripts en http://www.javascript.com.mx -->
+var pos=new Array(49);
+var jumps=new Array();
+var boardType="Solitaire";
+var numMoves=0;
+var finished=false;
+var selectnum=false;
+var autosolve=false;
+var running=false;
+var basenum=0;
+var destnum=0;
+var destnum1=0;
+var destnum2=0;
+var destnum3=0;
+var destnum4=0;
+var delaynum=500;
+
+if (document.images)
+{
+blank = new Image(19,19);
+blank.src = "blank.gif";
+empty = new Image(19,19);
+empty.src = "empty.gif";
+emptysel = new Image(19,19);
+emptysel.src = "emptysel.gif";
+peg = new Image(19,19);
+peg.src = "peg.gif";
+pegact = new Image(19,19);
+pegact.src = "pegact.gif";
+}
+
+function display(pos,basenum,destnum)
+{
+selectnum=false;
+if (!basenum && !destnum)
+{
+for (var i=0; i<pos.length; i++)
+{
+if (pos[i]==-1) document.images["img"+i].src=blank.src;
+else if (pos[i]==1) document.images["img"+i].src=peg.src;
+else document.images["img"+i].src=empty.src;
+}
+}
+else
+{
+document.images["img"+basenum].src=empty.src;
+document.images["img"+(basenum+destnum/2)].src=empty.src;
+document.images["img"+(basenum+destnum)].src=peg.src;
+for (var i=0; i<pos.length; i++)
+{
+if (document.images["img"+i].src==emptysel.src)
+document.images["img"+i].src=empty.src;
+}
+}
+if (numMoves>1) win();
+}
+
+function move(num)
+{
+var curNumMoves=numMoves;
+if (!document.images)
+alert("Your browser does not support the 'document.images' property. You\n" +
+"should upgrade to at least Netscape 3.0 or Internet explorer 4.0.");
+else if (autosolve && running) {}
+else if (autosolve && !finished)
+{
+if (confirm('You interrupted the \'Solucion\' function. Want to try it yourself?'))
+newGame();
+}
+else if (selectnum)
+{
+if (num!=basenum && num!=basenum+destnum1 && num!=basenum+destnum2 &&
+num!=basenum+destnum3 && num!=basenum+destnum4)
+alert("�Seleccione un destino o haga clic sobre la bolita de nuevo!");
+else if (num==basenum)
+{
+document.images["img"+basenum].src=peg.src;
+if (destnum1!=0)
+document.images["img"+(basenum+destnum1)].src=empty.src;
+if (destnum2!=0)
+document.images["img"+(basenum+destnum2)].src=empty.src;
+if (destnum3!=0)
+document.images["img"+(basenum+destnum3)].src=empty.src;
+if (destnum4!=0)
+document.images["img"+(basenum+destnum4)].src=empty.src;
+selectnum=false;
+}
+else if (num==basenum+destnum1) movePeg(basenum,destnum1)
+else if (num==basenum+destnum2) movePeg(basenum,destnum2)
+else if (num==basenum+destnum3) movePeg(basenum,destnum3)
+else if (num==basenum+destnum4) movePeg(basenum,destnum4)
+}
+else if (pos[num]==0)
+{
+}
+else if ((num==3 || num==10) && pos[num+7]==1 && pos[num+14]==0) movePeg(num,14);
+else if ((num==45 || num==38) && pos[num-7]==1 && pos[num-14]==0) movePeg(num,-14);
+else if ((num==21 || num==22) && pos[num+1]==1 && pos[num+2]==0) movePeg(num,2);
+else if ((num==26 || num==27) && pos[num-1]==1 && pos[num-2]==0) movePeg(num,-2);
+else if (num==4 || num==11 || num==19 || num==20)
+{
+if (pos[num-1]==1 && pos[num-2]==0 && pos[num+7]==1 && pos[num+14]==0)
+selPeg(num,-2,14);
+else if (pos[num-1]==1 && pos[num-2]==0) movePeg(num,-2);
+else if (pos[num+7]==1 && pos[num+14]==0) movePeg(num,14);
+}
+else if (num==2 || num==9 || num==14 || num==15)
+{
+if (pos[num+1]==1 && pos[num+2]==0 && pos[num+7]==1 && pos[num+14]==0)
+selPeg(num,2,14);
+else if (pos[num+1]==1 && pos[num+2]==0) movePeg(num,2);
+else if (pos[num+7]==1 && pos[num+14]==0) movePeg(num,14);
+}
+else if (num==28 || num==29 || num==37 || num==44)
+{
+if (pos[num+1]==1 && pos[num+2]==0 && pos[num-7]==1 && pos[num-14]==0)
+selPeg(num,2,-14);
+else if (pos[num+1]==1 && pos[num+2]==0) movePeg(num,2);
+else if (pos[num-7]==1 && pos[num-14]==0) movePeg(num,-14);
+}
+else if (num==33 || num==34 || num==39 || num==46)
+{
+if (pos[num-1]==1 && pos[num-2]==0 && pos[num-7]==1 && pos[num-14]==0)
+selPeg(num,-2,-14);
+else if (pos[num-1]==1 && pos[num-2]==0) movePeg(num,-2);
+else if (pos[num-7]==1 && pos[num-14]==0) movePeg(num,-14);
+}
+else if (num==16 || num==17 || num==18 || num==23 || num==24 || num==25 ||
+num==30 || num==31 || num==32)
+{
+var cond1=(pos[num-1]==1 && pos[num-2]==0);
+var cond2=(pos[num-7]==1 && pos[num-14]==0);
+var cond3=(pos[num+1]==1 && pos[num+2]==0);
+var cond4=(pos[num+7]==1 && pos[num+14]==0);
+if ((cond1 && (cond2 || cond3 || cond4)) ||
+(cond2 && (cond1 || cond3 || cond4)) ||
+(cond3 && (cond1 || cond2 || cond4)))
+{
+basenum=num;
+destnum1=destnum2=destnum3=destnum4=0;
+document.images["img"+basenum].src=pegact.src;
+if (cond1)
+{
+destnum1=-2;
+document.images["img"+(basenum+destnum1)].src=emptysel.src;
+}
+if (cond2)
+{
+destnum2=-14;
+document.images["img"+(basenum+destnum2)].src=emptysel.src;
+}
+if (cond3)
+{
+destnum3=2;
+document.images["img"+(basenum+destnum3)].src=emptysel.src;
+}
+if (cond4)
+{
+destnum4=14;
+document.images["img"+(basenum+destnum4)].src=emptysel.src;
+}
+selectnum=true;
+}
+else if (cond1) movePeg(num,-2);
+else if (cond2) movePeg(num,-14);
+else if (cond3) movePeg(num,2);
+else if (cond4) movePeg(num,14);
+}
+if (curNumMoves!=numMoves) display(pos,basenum,destnum);
+else if (finished) win();
+}
+
+function selPeg(num,ofset1,ofset2)
+{
+basenum=num;
+destnum1=ofset1;
+destnum2=ofset2;
+destnum3=destnum4=0;
+document.images["img"+basenum].src=pegact.src;
+document.images["img"+(basenum+destnum1)].src=emptysel.src;
+document.images["img"+(basenum+destnum2)].src=emptysel.src;
+selectnum=true;
+}
+
+function movePeg(num,ofset)
+{
+pos[num+ofset]=1;
+pos[num+ofset/2]=pos[num]=0
+basenum=num;
+destnum=ofset;
+numMoves++;
+}
+
+function win()
+{
+var cnt=0;
+for(var i=0; i<pos.length; i++)
+{
+if (pos[i]!=-1) cnt+=pos[i];
+}
+if (cnt==1 && autosolve)
+{
+if (confirm('Esta es la Solucion Lo intentas tu ?'))
+newGame();
+}
+else if (cnt==1 && pos[24]==1)
+{
+finished=true;
+if (confirm('Lo conseguiste. Lo intentas de nuevo?')) newGame();
+}
+else if (cnt==1)
+{
+finished=true;
+if (confirm('You did it! Do you want to restart?')) newGame();
+}
+else
+{
+var legalMoves=false;
+var num=0;
+while (num<pos.length && !legalMoves)
+{
+if (pos[num]==1 &&
+(((num==2 || num==9 || num==14 || num==15 || num==16 || num==17 ||
+num==18 || num==23 || num==24 || num==25 || num==30 || num==31 ||
+num==32 || num==21 || num==22 || num==28 || num==29 || num==37 ||
+num==44) && pos[num+1]==1 && pos[num+2]==0) ||
+((num==4 || num==11 || num==19 || num==20 || num==16 || num==17 ||
+num==18 || num==23 || num==24 || num==25 || num==30 || num==31 ||
+num==32 || num==26 || num==27 || num==33 || num==34 || num==39 ||
+num==46) && pos[num-1]==1 && pos[num-2]==0) ||
+((num==2 || num==9 || num==14 || num==15 || num==16 || num==17 ||
+num==18 || num==23 || num==24 || num==25 || num==30 || num==31 ||
+num==32 || num==4 || num==11 || num==19 || num==20 || num==3 ||
+num==10) && pos[num+7]==1 && pos[num+14]==0) ||
+((num==33 || num==34 || num==39 || num==46 || num==16 || num==17 ||
+num==18 || num==23 || num==24 || num==25 || num==30 || num==31 ||
+num==32 || num==45 || num==38 || num==28 || num==29 || num==37 ||
+num==44) && pos[num-7]==1 && pos[num-14]==0)))
+legalMoves=true;
+num++;
+}
+if (!legalMoves)
+{
+finished=true;
+if (confirm('No hay m�s movimientos. �Quieres volver a jugar ?')) newGame();
+}
+}
+}
+
+function newGame()
+{
+if (autosolve && running) {}
+else if (document.images)
+{
+autosolve=false;
+finished=false;
+if (boardType=="Cross")
+{
+for (var i=0; i<pos.length; i++) pos[i]=0;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[10]=pos[16]=pos[17]=pos[18]=pos[24]=pos[31]=1;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Plus")
+{
+for (var i=0; i<pos.length; i++) pos[i]=0;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[10]=pos[17]=pos[22]=pos[23]=pos[24]=1;
+pos[25]=pos[26]=pos[31]=pos[38]=1;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Fireplace")
+{
+for (var i=0; i<pos.length; i++) pos[i]=0;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[2]=pos[3]=pos[4]=pos[9]=pos[10]=1;
+pos[11]=pos[16]=pos[17]=pos[18]=1;
+pos[23]=pos[25]=1;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Up Arrow")
+{
+for (var i=0; i<pos.length; i++) pos[i]=0;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[3]=pos[9]=pos[10]=pos[11]=pos[15]=1;
+pos[16]=pos[17]=pos[18]=pos[19]=1;
+pos[24]=pos[31]=pos[37]=pos[38]=1;
+pos[39]=pos[44]=pos[45]=pos[46]=1;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Pyramid")
+{
+for (var i=0; i<pos.length; i++) pos[i]=0;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[10]=pos[16]=pos[17]=pos[18]=pos[22]=1;
+pos[23]=pos[24]=pos[25]=pos[26]=1;
+pos[28]=pos[29]=pos[30]=pos[31]=1;
+pos[32]=pos[33]=pos[34]=1;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Diamond")
+{
+for (var i=0; i<pos.length; i++) pos[i]=1;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[2]=pos[4]=pos[14]=pos[20]=pos[24]=0;
+pos[28]=pos[34]=pos[44]=pos[46]=0;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+else if (boardType=="Solitaire")
+{
+for (var i=0; i<pos.length; i++) pos[i]=1;
+pos[0]=pos[1]=pos[5]=pos[6]=-1;
+pos[7]=pos[8]=pos[12]=pos[13]=-1;
+pos[24]=0;
+pos[35]=pos[36]=pos[40]=pos[41]=-1;
+pos[42]=pos[43]=pos[47]=pos[48]=-1;
+}
+numMoves=0;
+running=true;
+changeBoard();
+running=false;
+solveArray();
+display(pos);
+}
+else
+alert("Your browser does not support the 'document.images' property. You\n" +
+"should upgrade to at least Netscape 3.0 or Internet explorer 4.0.");
+}
+
+function initArray()
+{
+this.length=initArray.arguments.length;
+for (var i=0; i<this.length; i++)
+{
+this[i] = initArray.arguments[i]
+}
+}
+
+function drawPreview(start,end)
+{
+i=start; j=end;
+baseref=jumps[start];
+offset=jumps[start+1];
+pos[baseref]=pos[baseref+offset/2]=0;
+pos[baseref+offset]=1;
+document.images["img"+baseref].src=pegact.src;
+document.images["img"+(baseref+offset)].src=emptysel.src;
+solveRunning=setTimeout('drawJump(i,j)',delaynum);
+}
+
+function drawJump(start,end)
+{
+i=start; j=end;
+baseref=jumps[start];
+offset=jumps[start+1];
+document.images["img"+baseref].src=empty.src;
+document.images["img"+(baseref+offset/2)].src=empty.src;
+document.images["img"+(baseref+offset)].src=peg.src;
+if (start+2==end)
+{
+document.buttonsform.solve.value="Solucion";
+running=false;
+finished=true;
+setTimeout('win()',delaynum);
+}
+else solveRunning=setTimeout('drawPreview(i+2,j)',delaynum);
+}
+
+function solve()
+{
+if (!document.images)
+alert("Your browser does not support the 'document.images' property. You\n" +
+"should upgrade to at least Netscape 3.0 or Internet explorer 4.0.");
+else if (autosolve && running)
+{
+clearTimeout(solveRunning);
+document.buttonsform.solve.value="Solucion";
+running=false;
+}
+else
+{
+document.buttonsform.solve.value=" Stop ";
+newGame();
+autosolve=true;
+running=true;
+solveRunning=setTimeout('drawPreview(0,jumps.length)',delaynum);
+}
+}
+
+function changeBoard()
+{
+formName=document.buttonsform;
+if (!running)
+{
+boardType=formName.options[formName.options.selectedIndex].value;
+newGame();
+}
+else
+{
+optlength=formName.options.length;
+for (var m=0; m<optlength; m++)
+{
+if (formName.options[m].value==boardType)
+{
+formName.options.selectedIndex=m;
+break;
+}
+}
+}
+}
+
+function solveArray()
+{
+if (boardType=="Cross")
+{
+jumps = new initArray(17,-2,31,-14,18,-2,15,2,10,14);
+}
+else if (boardType=="Plus")
+{
+jumps = new initArray(23,-2,25,-2,10,14,24,-2,21,2,
+38,-14,23,2,26,-2);
+}
+else if (boardType=="Fireplace")
+{
+jumps = new initArray(17,2,4,14,25,-14,2,2,4,14,
+19,-2,10,14,24,-2,9,14,22,2);
+}
+else if (boardType=="Up Arrow")
+{
+jumps = new initArray(46,-14,31,2,45,-14,44,-14,30,2,33,-2,
+18,-14,4,-2,16,2,2,14,15,2,18,-2,31,
+-14,16,2,19,-2,10,14);
+}
+else if (boardType=="Pyramid")
+{
+jumps = new initArray(23,14,25,14,28,2,34,-2,37,-14,39,-14,
+16,14,18,-2,31,-2,29,-14,15,2,17,14,
+26,-2,31,-14,10,14);
+}
+else if (boardType=="Diamond")
+{
+jumps = new initArray(30,14,44,2,32,2,34,-14,18,-14,4,-2,
+16,-2,14,14,46,-14,20,-2,2,14,28,2,
+38,-14,17,-2,15,14,29,2,31,2,33,-14,
+19,-2,24,-2,10,14,25,-2,22,2);
+}
+else if (boardType=="Solitaire")
+{
+jumps = new initArray(38,-14,33,-2,46,-14,25,14,44,2,46,-14,
+11,14,20,-2,17,2,34,-14,20,-2,
+15,2,2,14,23,-14,4,-2,2,14,
+37,-14,28,2,31,-2,14,14,28,2,
+17,-2,15,14,29,2,31,2,33,-14,19,-2,
+24,-2,10,14,25,-2,22,2);
+}
+}
+
+</SCRIPT>
+</p>
+<CENTER>
+
+<TABLE BORDER="1" BGCOLOR="#007777" CELLPADDING=" 15" CELLSPACING="0">
+<TR><TD ALIGN="CENTER"><IMG SRC=" blank.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img0">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img1">
+<A HREF="#" onClick="window.move(2);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img2"></A>
+<A HREF="#" onClick="window.move(3);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img3"></A>
+<A HREF="#" onClick="window.move(4);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img4"></A>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img5">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img6"><BR>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img7">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img8">
+<A HREF="#" onClick="window.move(9);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img9"></A>
+<A HREF="#" onClick="window.move(10);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img10"></A>
+<A HREF="#" onClick="window.move(11);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img11"></A>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img12">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img13"><BR>
+<A HREF="#" onClick="window.move(14);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img14"></A>
+<A HREF="#" onClick="window.move(15);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img15"></A>
+<A HREF="#" onClick="window.move(16);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img16"></A>
+<A HREF="#" onClick="window.move(17);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img17"></A>
+<A HREF="#" onClick="window.move(18);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img18"></A>
+<A HREF="#" onClick="window.move(19);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img19"></A>
+<A HREF="#" onClick="window.move(20);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img20"></A><BR>
+<A HREF="#" onClick="window.move(21);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img21"></A>
+<A HREF="#" onClick="window.move(22);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img22"></A>
+<A HREF="#" onClick="window.move(23);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img23"></A>
+<A HREF="#" onClick="window.move(24);return false" onMouseOver="window.status='';
+return true"><IMG SRC="empty.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img24"></A>
+<A HREF="#" onClick="window.move(25);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img25"></A>
+<A HREF="#" onClick="window.move(26);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img26"></A>
+<A HREF="#" onClick="window.move(27);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img27"></A><BR>
+<A HREF="#" onClick="window.move(28);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img28"></A>
+<A HREF="#" onClick="window.move(29);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img29"></A>
+<A HREF="#" onClick="window.move(30);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img30"></A>
+<A HREF="#" onClick="window.move(31);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img31"></A>
+<A HREF="#" onClick="window.move(32);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img32"></A>
+<A HREF="#" onClick="window.move(33);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img33"></A>
+<A HREF="#" onClick="window.move(34);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img34"></A><BR>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img35">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img36">
+<A HREF="#" onClick="window.move(37);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img37"></A>
+<A HREF="#" onClick="window.move(38);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img38"></A>
+<A HREF="#" onClick="window.move(39);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img39"></A>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img40">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img41"><BR>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img42">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img43">
+<A HREF="#" onClick="window.move(44);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img44"></A>
+<A HREF="#" onClick="window.move(45);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img45"></A>
+<A HREF="#" onClick="window.move(46);return false" onMouseOver="window.status='';
+return true"><IMG SRC="peg.gif" BORDER="0" WIDTH="19" HEIGHT=" 19" NAME="img46"></A>
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img47">
+<IMG SRC="blank.gif" BORDER="0" WIDTH="19" HEIGHT="19" NAME="img48"><BR></TD></TR>
+</TABLE>
+<div id="Layer1">
+<script type="text/javascript"><!--
+google_ad_client = "pub-1661336178490041";
+/* cuadrado 250 x 250 */
+google_ad_slot = "0744642487";
+google_ad_width = 250;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+<div class="Estilo17" id="Layer2"> <a href="../../../private/juegos-javascript.html">Volver a juegos &gt;&gt;</a> </div>
+<P>
+<FORM NAME="buttonsform">
+<INPUT TYPE="button" NAME="new" VALUE=" Empezar" onClick="window.newGame()">
+<INPUT TYPE="button" NAME="solve" VALUE=" Solucion" onClick="window.solve()">
+<SELECT NAME="options" onChange="(window.changeBoard())">
+<OPTION VALUE="Cross">Cruz
+<OPTION VALUE="Plus">Suma
+<OPTION VALUE="Fireplace">Superior
+<OPTION VALUE="Up Arrow">Flecha
+<OPTION VALUE="Pyramid">Piramide
+<OPTION VALUE="Diamond">Diamante
+<OPTION SELECTED VALUE="Solitaire">Solitario
+</SELECT>
+</FORM>
+<P>Pulsar &quot;Empezar&quot; y ya est&aacute; listo para jugar
+
+</TD></TR>
+</TABLE>
+</TD></TR>
+</TABLE>
+<P>
+<P>
+</CENTER>
+
+
+
+
+
+
+
+
+
+
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<table width="943" border="0">
+<tr>
+<td width="440">&nbsp;</td>
+<td width="88"><a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/es/"> <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-nd/3.0/es/88x31.png" /></a> </td>
+<td width="195"><div align="center"> <a href="http://www.google.es/privacy.html">Privacidad de Google </a>&nbsp;</div></td>
+<td width="202"><div align="center"> <a href="../../legal/condiciones.html" class=" Estilo16">Leer condiciones</a> </div></td>
+</tr>
+</table>
+<table width="943" border="0">
+<tr>
+<td width="937"><div align="center"> <br />
+<span xmlns:dc="http://purl.org/dc/elements/1.1/" href="http://purl.org/dc/dcmitype/InteractiveResource" property="dc:title" rel="dc:type">dibucuentos</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.dibucuentos.com" property=" cc:attributionName" rel="cc:attributionURL">Francisco Mielgo Santiago</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/es/">Creative Commons Reconocimiento-No comercial-Sin obras derivadas 3.0 Espa&#241;a License</a>.<br />
+</div></td>
+</tr>
+</table>
+<table width="955" border="0">
+<tr>
+<td width="949" height="38"> <h1 class="Estilo18">tower of hanoi, tetris, mazesmith, el ahorcado, hundir la flota, puzzle</h1>
+</td>
+</tr>
+</table>
+</body>
+</html>
