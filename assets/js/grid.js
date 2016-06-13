@@ -46,7 +46,30 @@ var selected = {occupied:"", x:0, y:0, king:false};
 var turn = 'white';
 var white;
 var red;
+var dataFromSocket;
+var player;
 
+io.socket.get('/movimiento/suscribe', function(res){});
+
+io.socket.on('movimiento', function onServerSentEvent (msg) {
+	console.log('recieve');
+	dataFromSocket = msg.data;
+	switch(msg.verb) {
+	case 'created':
+		if(player != dataFromSocket.player){
+			movePiece();
+		}else{
+			dataFromSocket = null;
+		}
+		break;
+	default: return;
+	}
+});
+
+function setPlayer(pl){
+	player = pl;
+	$('#player').fadeOut();
+}
 
 //al terminar de cargar el html se llama a este metodo
 function loadGrid()
@@ -84,10 +107,11 @@ function loadGrid()
 		});
 }
 
+
 function printGrid()
 {
 	var board = document.getElementById('gamegrid');
-	var html = "<table class='grid'>";
+	var html = "<table class='grid' id='gridId'>";
 
 	for (var i = 0; i < grid.length; i++)
 	{
@@ -167,13 +191,44 @@ function addEvents()
 
 	for (var i = 0; i < tds.length; i++)
 	{
-		tds[i].onclick = movePiece;
+		tds[i].onclick = sendDataMovePiece;
 	}
 }
 
-function movePiece()
+function sendDataMovePiece(){
+	if((turn == 'white' && player == '2') || (turn == 'red' && player == '1' )){
+		alert('Es el turno del otro jugador');
+	}else{
+		if(player){
+			movePiece(this);
+			sendData();
+		}else{
+			alert("Debes escoger el Jugador")
+		}
+	}
+}
+
+function sendData(){
+	console.log("sendData");
+	var data = new FormData();
+	data.append('x', gridPiece.x);
+	data.append('y', gridPiece.y);
+	data.append('player',player);
+	console.log(data);
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', 'movimiento/move', true);
+	xhr.send(data);
+}
+
+function movePiece(context)
 {
-	cell = this;
+	if(dataFromSocket){
+		cell = $('#gridId')[0].rows[dataFromSocket.y].cells[dataFromSocket.x];
+		dataFromSocket = undefined;
+	}else{
+		cell = context;
+	}
+	console.log(cell);
 	x = cell.cellIndex;
 	y = cell.parentNode.rowIndex;
 	gridPiece = getGridPiece(x, y);
@@ -189,7 +244,7 @@ function movePiece()
 		gridPiece.occupied = "";
 
 		cell.innerHTML = "<div id=''></div>";
-		cell.onclick = movePiece;
+		cell.onclick = sendDataMovePiece;
 	}
 	else if (selected.occupied.indexOf('white') != -1)
 	{
@@ -202,7 +257,7 @@ function movePiece()
 		if ((x == selected.x-1 || x == selected.x+1) && (y == selected.y+1) && (gridPiece.occupied == ""))
 		{
 			cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 			gridPiece.occupied = selected.occupied;
 			gridPiece.king = selected.king;
 			selected.occupied = "";
@@ -218,12 +273,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x+1, y-1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -239,12 +294,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x-1, y-1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -263,12 +318,12 @@ function movePiece()
 			selected.y = 0;
 
 			cell.innerHTML = "<div id=" + gridPiece.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 		}//Move king
 		else if ((x == selected.x-1 || x == selected.x+1) && (y == selected.y-1) && (gridPiece.occupied == "") && selected.king)
 		{
 			cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 			gridPiece.occupied = selected.occupied;
 			gridPiece.king = selected.king;
 			selected.occupied = "";
@@ -284,12 +339,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x+1, y+1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -305,12 +360,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x-1, y+1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -331,7 +386,7 @@ function movePiece()
 		if ((x == selected.x-1 || x == selected.x+1) && (y == selected.y-1) && (gridPiece.occupied == ""))
 		{
 			cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 			gridPiece.occupied = selected.occupied;
 			gridPiece.king = selected.king;
 			selected.occupied = "";
@@ -347,12 +402,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x+1, y+1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -368,12 +423,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x-1, y+1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -392,12 +447,12 @@ function movePiece()
 			selected.y = 0;
 
 			cell.innerHTML = "<div id=" + gridPiece.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 		}//Move king
 		else if ((x == selected.x-1 || x == selected.x+1) && (y == selected.y+1) && (gridPiece.occupied == "") && selected.king)
 		{
 			cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-			cell.onclick = movePiece;
+			cell.onclick = sendDataMovePiece;
 			gridPiece.occupied = selected.occupied;
 			gridPiece.king = selected.king;
 			selected.occupied = "";
@@ -413,12 +468,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x+1, y-1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -434,12 +489,12 @@ function movePiece()
 			{
 				jumpedCell = getGridCell(x-1, y-1);
 				cell.innerHTML = "<div id=" + selected.occupied + "></div>";
-				cell.onclick = movePiece;
+				cell.onclick = sendDataMovePiece;
 				gridPiece.occupied = selected.occupied;
 				gridPiece.king = selected.king;
 				jumped.occupied = "";
 				jumpedCell.innerHTML = "<div id=''></div>";
-				jumpedCell.onclick = movePiece;
+				jumpedCell.onclick = sendDataMovePiece;
 				selected.occupied = "";
 				selected.king = false;
 				selected.x = 0;
@@ -581,7 +636,7 @@ function load()
 	}
 
 	printGrid();
-	addEvents()
+	addEvents();
 }
 
 

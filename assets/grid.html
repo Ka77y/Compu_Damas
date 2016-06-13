@@ -1,12 +1,21 @@
 <html>
 	<head>
 		<title>Checkers</title>
+		<script src="js/dependencies/jquery/jquery.min.js"></script>
+    	<script src="js/dependencies/sails.io.js"></script>
 		<script type='text/javascript' src='js/AnimateCSS.js'></script>
 		<script type='text/javascript' src='js/grid.js'></script>
 		<link rel='stylesheet' type='text/css' href='css/gamegrid.css' />
 
 	</head>
 	<body onload='loadGrid()'>
+
+		<h1>Selecciona el jugador</h1>
+		<div id='player'>
+			<button type='button' onclick="setPlayer('1')">Player 1</button>
+			<button type='button' onclick="setPlayer('2')">Player 2</button>
+		</div>
+
 		<br/><h2 id='checkerslbl'>Checkers</h2><br/><br/>
 		<div id='whiteplayer'>White Player's name: <input id='whitename'></input><button type='button' onclick='setName("white")'>Submit</button><br/><br/></div>
 		<div id='gamegrid'></div>
