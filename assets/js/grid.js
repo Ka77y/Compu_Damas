@@ -146,22 +146,23 @@ function printGrid()
 
 function setName(color, playername)
 {
-	var outer = document.getElementById(color + 'player');
-	if (!playername)
-	{
-		playername = document.getElementById(color + 'name').value;
-	}
-	outer.innerHTML = '<h4>' + playername + '</h4>';
-
-	switch(color)
-	{
-		case 'white':
-			white = playername;
-			break;
-		case 'red':
-			red = playername;
-			break;
-
+	if(player){
+		var outer = document.getElementById('player' + player);
+		if (!playername)
+		{
+			playername = document.getElementById('nombre').value;
+		}
+		outer.innerHTML = '<h4>' + playername + '</h4>';
+		$('#nombreJugador').fadeOut();
+		switch(color)
+		{
+			case 'white':
+				white = playername;
+				break;
+			case 'red':
+				red = playername;
+				break;
+		}
 	}
 }
 
@@ -174,12 +175,12 @@ function selectOption()
 	}
 	else if (options.value == 'redsurrender')
 	{
-		alert('White Wins!');
+		alert('Blanco Gana!');
 		location.reload(true);
 	}
 	else if (options.value == 'whitesurrender')
 	{
-		alert('Red Wins!');
+		alert('Rojo Gana!');
 		location.reload(true);
 	}
 }
@@ -522,12 +523,12 @@ function gameFinished()
 
 	if (!white_exists)
 	{
-		alert('Red Wins!');
+		alert('Rojo Gana!');
 		location.reload(true);
 	}
 	else if (!red_exists)
 	{
-		alert('White Wins!');
+		alert('Blanco Gana!');
 		location.reload(true);
 	}
 
