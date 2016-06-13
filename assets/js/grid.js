@@ -49,8 +49,11 @@ var red;
 var dataFromSocket;
 var player;
 
+//Empieza la implementacion del socket
+//Establecer la conexion con el servidro a travez de sockets
 io.socket.get('/movimiento/suscribe', function(res){});
 
+//definicion del metodo a ejecutar cuando el servidor envie los datos
 io.socket.on('movimiento', function onServerSentEvent (msg) {
 	console.log('recieve');
 	dataFromSocket = msg.data;
@@ -66,6 +69,7 @@ io.socket.on('movimiento', function onServerSentEvent (msg) {
 	}
 });
 
+//Pone el player y esconde el input
 function setPlayer(pl){
 	player = pl;
 	$('#player').fadeOut();
@@ -76,38 +80,9 @@ function loadGrid()
 {
 	printGrid();
 	addEvents();
-	checkerslbl = document.getElementById('checkerslbl');
-	checkerslbl.style.position = "relative";
-	animateCSS(checkerslbl, 200, 100,
-		{
-			left: function(frame,time)
-			{
-				if (frame <= 50)
-				{
-					return frame + "px";
-				}
-				else if (frame > 100 && frame <= 150)
-				{
-					count = (frame-150) * (-1);
-					return count;
-				}
-			},
-			top: function(frame,time)
-			{
-				if (frame > 50 && frame <= 100)
-				{
-					return (frame-50) + "px";
-				}
-				else if (frame > 150 && frame <= 200)
-				{
-					count = (frame-200) * (-1);
-					return count;
-				}
-			}
-		});
 }
 
-
+//Imprime el grid
 function printGrid()
 {
 	var board = document.getElementById('gamegrid');
@@ -146,6 +121,7 @@ function printGrid()
 
 function setName(color, playername)
 {
+	//Guarda el nombre
 	if(player){
 		var outer = document.getElementById('player' + player);
 		if (!playername)
@@ -166,25 +142,6 @@ function setName(color, playername)
 	}
 }
 
-function selectOption()
-{
-	var options = document.getElementById('options');
-	if (options.value == 'reset')
-	{
-		location.reload(true);
-	}
-	else if (options.value == 'redsurrender')
-	{
-		alert('Blanco Gana!');
-		location.reload(true);
-	}
-	else if (options.value == 'whitesurrender')
-	{
-		alert('Rojo Gana!');
-		location.reload(true);
-	}
-}
-
 function addEvents()
 {
 	var gridDiv = document.getElementById('gamegrid');
@@ -192,16 +149,21 @@ function addEvents()
 
 	for (var i = 0; i < tds.length; i++)
 	{
+		//Setea el metodo a llamar cuando se hace click en cada una de las celdas
 		tds[i].onclick = sendDataMovePiece;
 	}
 }
 
 function sendDataMovePiece(){
+	//Controla el turno del jugador
 	if((turn == 'white' && player == '2') || (turn == 'red' && player == '1' )){
 		alert('Es el turno del otro jugador');
 	}else{
+		//Controla que el jugardor se haya registrado
 		if(player){
+			//Llama a mover pieza
 			movePiece(this);
+			//Envia la data al server
 			sendData();
 		}else{
 			alert("Debes escoger el Jugador")
@@ -210,12 +172,14 @@ function sendDataMovePiece(){
 }
 
 function sendData(){
+	//Mantego la conexion por si acaso :D
 	io.socket.get('/movimiento/suscribe', function(res){});
 	data = {
 		x: gridPiece.x,
 		y: gridPiece.y,
 		player: player
 	};
+	//Envio de informacion del movimiento a travez del socket
 	io.socket.post('/movimiento/move', data, function(res){});
 }
 
@@ -228,9 +192,11 @@ function movePiece(context)
 		cell = context;
 	}
 	console.log(cell);
+	//obtiene la informacion de la celda
 	x = cell.cellIndex;
 	y = cell.parentNode.rowIndex;
 	gridPiece = getGridPiece(x, y);
+	//Imprime los datos debajo del grib
 	var location = document.getElementById('location');
 	location.innerHTML = 'x: ' + x + ', y: ' + y;
 
@@ -636,6 +602,25 @@ function load()
 
 	printGrid();
 	addEvents();
+}
+
+function selectOption()
+{
+	var options = document.getElementById('options');
+	if (options.value == 'reset')
+	{
+		location.reload(true);
+	}
+	else if (options.value == 'redsurrender')
+	{
+		alert('Blanco Gana!');
+		location.reload(true);
+	}
+	else if (options.value == 'whitesurrender')
+	{
+		alert('Rojo Gana!');
+		location.reload(true);
+	}
 }
 
 
