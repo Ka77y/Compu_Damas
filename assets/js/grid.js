@@ -209,15 +209,13 @@ function sendDataMovePiece(){
 }
 
 function sendData(){
-	console.log("sendData");
-	var data = new FormData();
-	data.append('x', gridPiece.x);
-	data.append('y', gridPiece.y);
-	data.append('player',player);
-	console.log(data);
-	var xhr = new XMLHttpRequest();
-	xhr.open('POST', 'movimiento/move', true);
-	xhr.send(data);
+	io.socket.get('/movimiento/suscribe', function(res){});
+	data = {
+		x: gridPiece.x,
+		y: gridPiece.y,
+		player: player
+	};
+	io.socket.post('/movimiento/move', data, function(res){});
 }
 
 function movePiece(context)
